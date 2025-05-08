@@ -26,8 +26,8 @@ To use or contribute to this project, follow the steps below:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/simulated-kernel-cpu.git
-   cd simulated-kernel-cpu
+   git clone https://github.com/Mohammed0101-lgtm/simulator
+   cd simulator
 
 
 ### Note

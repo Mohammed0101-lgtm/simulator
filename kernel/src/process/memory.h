@@ -1,0 +1,67 @@
+#ifndef __MEMORY_H__
+#define __MEMORY_H__
+
+#include "PCB.h"
+#include <memory>
+#include <unordered_map>
+
+
+namespace kernel {
+namespace memo {
+
+using PageID            = int;
+constexpr int PAGE_SIZE = 4096;
+
+struct PageTableEntry
+{
+    PageID physical_page;
+    int    flag;
+};
+
+struct PageTable
+{
+    std::unordered_map<PageID, PageTableEntry> entries;
+};
+
+struct PhysicalPage
+{
+    int                     ref_count = 0;
+    std::unique_ptr<char[]> data;
+
+    PhysicalPage() :
+        data(new char[PAGE_SIZE]) {}  // Assuming page size is 4096 bytes
+};
+
+struct VirtualPage
+{
+    PageID    page_id;
+    proc::PID pid;
+    int       offset;
+
+    VirtualPage(PageID id, proc::PID process_id, int off) :
+        page_id(id),
+        pid(process_id),
+        offset(off) {}
+};
+
+enum PageFlags {
+    READ  = 1 << 0,
+    WRITE = 1 << 1,
+    COW   = 1 << 2
+};
+
+struct MemoryManager
+{
+    std::unordered_map<PageID, PhysicalPage> physical_pages;
+    PageID                                   next_page_id = 0;
+
+    PageID        allocate_physical_page();
+    void          increment_ref(PageID page);
+    void          decrement_ref(PageID page);
+    PhysicalPage& get_page(PageID id);
+};
+
+};  // namespace memo
+};  // namespace kernel
+
+#endif  // __MEMORY_H__

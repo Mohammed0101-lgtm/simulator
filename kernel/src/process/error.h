@@ -81,7 +81,7 @@ class page_fault: public std::exception
     const std::string& imp() const { return imp_; }
 };
 
-};  // namespace error
-};  // namespace kernel
+}  // namespace error
+}  // namespace kernel
 
 #endif  // __ERROR_H__

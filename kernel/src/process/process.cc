@@ -97,5 +97,5 @@ std::unique_ptr<Process> Process::fork_process(memo::MemoryManager& mm, PID chil
 }
 
 
-};  // namespace proc
-};  // namespace kernel
+}  // namespace proc
+}  // namespace kernel

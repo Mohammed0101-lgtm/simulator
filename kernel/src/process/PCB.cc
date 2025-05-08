@@ -30,5 +30,5 @@ void PCB::setSP(int sp) { _sp = sp; }
 void PCB::setBase(int base) { _base = base; }
 void PCB::setLimit(int limit) { _limit = limit; }
 
-};  // namespace proc
-};  // namespace kernel
+}  // namespace proc
+}  // namespace kernel

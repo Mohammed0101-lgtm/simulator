@@ -59,9 +59,13 @@ struct MemoryManager
     void          increment_ref(PageID page);
     void          decrement_ref(PageID page);
     PhysicalPage& get_page(PageID id);
+    void          write_u8(PageID page_id, uint32_t offset, uint8_t value);
+    uint32_t      read_u32(PageID page_id, uint32_t offset) const;
+    uint8_t       read_u8(PageID, uint32_t offset) const;
+    void          write_u32(PageID page_id, uint32_t offset, uint32_t value);
 };
 
-};  // namespace memo
-};  // namespace kernel
+}  // namespace memo
+}  // namespace kernel
 
 #endif  // __MEMORY_H__

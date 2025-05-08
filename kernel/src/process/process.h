@@ -56,8 +56,8 @@ class Process
     std::unique_ptr<Process> Process::fork_process(memo::MemoryManager& mm, PID child_pid);
 };
 
-};  // namespace proc
-};  // namespace proc
+}  // namespace proc
+}  // namespace proc
 
 
 #endif  // __PROCESS_H__

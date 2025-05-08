@@ -34,15 +34,15 @@ typedef enum: int {
 class PCB
 {
    protected:
-    PID          _pid;        // Process ID
-    int          _priority;   // Process priority
-    ProcessState _state;      // Process state (e.g., running, waiting, etc.)
-    int          _pc;         // Program counter
-    int          _sp;         // Stack pointer
-    int          _base;       // Base address of the process's memory segment
-    int          _limit;      // Limit address of the process's memory segment
-    int*         _stack;      // Pointer to the process's stack
-    std::size_t  _stackSize;  // Size of the process's stack
+    PID          _pid;                             // Process ID
+    int          _priority = 0;                    // Process priority
+    ProcessState _state    = ProcessState::READY;  // Process state (e.g., running, waiting, etc.)
+    int          _pc;                              // Program counter
+    int          _sp;                              // Stack pointer
+    int          _base;                            // Base address of the process's memory segment
+    int          _limit;                           // Limit address of the process's memory segment
+    int*         _stack;                           // Pointer to the process's stack
+    std::size_t  _stackSize;                       // Size of the process's stack
 
    public:
     PCB(int pid, int priority, int pc, int sp, int base, int limit, std::size_t stackSize) :
@@ -83,8 +83,8 @@ class PCB
     void setLimit(int limit);
 };
 
-};  // namespace proc
-};  // namespace kernel
+}  // namespace proc
+}  // namespace kernel
 
 
 #endif  // __PCB_H__

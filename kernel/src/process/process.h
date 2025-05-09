@@ -24,7 +24,7 @@ class Process
     Process& operator=(const Process& other);
 
     void                     write_to_virtual_page(kernel::memo::PageID vpage, int offset, char value);
-    char                     read_from_virtual_page(kernel::memo::PageID vpage, int offset);
+    char                     read_from_virtual_page(kernel::w::PageID vpage, int offset);
     std::unique_ptr<Process> fork_process(PID child_pid);
 };
 

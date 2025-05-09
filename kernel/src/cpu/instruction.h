@@ -1,21 +1,28 @@
 #ifndef __INSTRUCTION_H__
 #define __INSTRUCTION_H__
 
+#include "../error.h"
+
+namespace kernel {
+namespace cpu {
+namespace instr {
+
 /*
-    --> Instruction table <--
-Opcode	Name	    Description
-0x01	LOAD	    RD = MEM[RS1 + IMM]
-0x02	STORE	    MEM[RS1 + IMM] = RD
-0x03	MOV	        RD = RS1
-0x04	ADDI	    RD = RS1 + IMM
-0x05	ADD	        RD = RS1 + RS2
-0x06	SUB	        RD = RS1 - RS2
-0x07	JMP	        PC = IMM
-0x08	BEQ	        if (RS1 == RS2) PC = IMM
-0x09	SYSCALL	    Trap to kernel; ID in R0, args in R1+
-0xFF	HALT	    Stop execution
+    --> Instruction set table <--
+Opcode	    Name	    Description
+0x01	    LOAD	    RD = MEM[RS1 + IMM]
+0x02	    STORE	    MEM[RS1 + IMM] = RD
+0x03	    MOV	        RD = RS1
+0x04	    ADDI	    RD = RS1 + IMM
+0x05	    ADD	        RD = RS1 + RS2
+0x06	    SUB	        RD = RS1 - RS2
+0x07	    JMP	        PC = IMM
+0x08	    BEQ	        if (RS1 == RS2) PC = IMM
+0x09	    SYSCALL	    Trap to kernel; ID in R0, args in R1+
+0xFF	    HALT	    Stop execution
 */
 
+/// mapping table
 typedef enum: int {
     LOAD    = 0x01,
     STORE   = 0x02,
@@ -27,7 +34,26 @@ typedef enum: int {
     BEQ     = 0x08,
     SYSCALL = 0x09,
     HALT    = 0xFF
-} Instruction;
+} VALUE;
+
+struct Instruction
+{
+    VALUE _value;  // for now just the value
+    // later on we might add other stuff
+
+    Instruction() = delete;  // should never use the default constructor
+    Instruction(int val) {
+        if (val < LOAD || (val > SYSCALL && val != HALT))
+            throw kernel::error::unknown_instruction("Error: Unknown instruction is not allowd.");
+        _value = static_cast<VALUE>(val);
+    }
+
+    bool operator==(const Instruction& other) const { return this->_value == other._value; }
+};
+
+}  // namespace instr
+}  // namespace cpu
+}  // namespace kernel
 
 
 #endif  // __INSTRUCTION_H__

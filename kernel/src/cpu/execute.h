@@ -1,13 +1,14 @@
 #ifndef __EXECUTE_H__
 #define __EXECUTE_H__
 
-#include "../process/memory.h"
+#include "../memory/memory.h"
 #include "register.h"
 #include <inttypes.h>
 
 
 namespace kernel {
 namespace cpu {
+
 
 class SimulatedCPU
 {
@@ -17,16 +18,16 @@ class SimulatedCPU
     uint32_t _sp;       // Stack Pointer
     bool     _halted = false;
 
-    memo::MemoryManager& _memory;
-
-    SimulatedCPU(memo::MemoryManager& mm);
+    SimulatedCPU();
 
     void tick();             // Execute one instruction
     void run_until_halt();   // Run until HALT
     void syscall_handler();  // Handle R0 syscall ID
 };
 
+
 }  // namespace cpu
 }  // namespace kernel
+
 
 #endif  // __EXECUTE_H__

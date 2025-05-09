@@ -63,7 +63,7 @@ void SimulatedCPU::tick() {
     default :
         throw kernel::error::unknown_instruction("Invalid opcode");
     }
-
+w
     _pc += 4;  // Move PC forward
 }
 

@@ -23,24 +23,23 @@ typedef enum: uint32_t {
 struct Register
 {
    private:
-    const RegLabel _label;
-    Instruction    _instruction;
+    const RegLabel                  _label;
+    kernel::cpu::instr::Instruction _instruction;
 
    public:
     Register() = delete;  // Can't use default constructor
 
     Register(const RegLabel label) :
-        _label(label) {}
+        _label(label),
+        _instruction(kernel::cpu::instr::VALUE::HALT) {}
 
     Register(const Register& other) :
         _label(other.getLabel()),
         _instruction(other.getInstruction()) {}
 
     RegLabel getLabel() const { return _label; }
-
-    void setInstruction(const Instruction instruction) noexcept { _instruction = instruction; }
-
-    Instruction getInstruction() const { return _instruction; }
+    void     setInstruction(const kernel::cpu::instr::Instruction instruction) noexcept { _instruction = instruction; }
+    kernel::cpu::instr::Instruction getInstruction() const { return _instruction; }
 };
 
 

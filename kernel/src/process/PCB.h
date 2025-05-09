@@ -15,9 +15,6 @@ struct PID
     PID(int v) :
         value(v) {}
 
-    // Implicit conversion if needed (or remove for type safety)
-    operator int() const { return value; }
-
     // Equality operators
     bool operator==(const PID& other) const { return value == other.value; }
     bool operator!=(const PID& other) const { return value != other.value; }
@@ -63,7 +60,7 @@ class PCB
 
     // Getters
     ProcessState getState() const;
-    int          getPID() const;
+    PID          getPID() const;
     int          getPriority() const;
     int          getPC() const;
     int          getSP() const;
@@ -73,14 +70,14 @@ class PCB
     std::size_t  getStackSize() const;
 
     // Setters
-    void setPID(PID pid);
-    void setStackSize(std::size_t stackSize);
-    void setState(ProcessState state);
-    void setPriority(int priority);
-    void setPC(int pc);
-    void setSP(int sp);
-    void setBase(int base);
-    void setLimit(int limit);
+    void setPID(const PID pid);
+    void setStackSize(const std::size_t stackSize);
+    void setState(const ProcessState state);
+    void setPriority(const int priority);
+    void setPC(const int pc);
+    void setSP(const int sp);
+    void setBase(const int base);
+    void setLimit(const int limit);
 };
 
 }  // namespace proc

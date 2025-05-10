@@ -39,12 +39,12 @@ kernel::memo::PhysicalPage& kernel::memo::MemoryManager::get_page(kernel::memo::
     if (physical_pages.find(id) != physical_pages.end())
         return physical_pages[id];
 
-    throw kernel::error::page_fault("Page not found");
+    throw kernel::error::Page_fault("Page not found");
 }
 
 void kernel::memo::MemoryManager::write_u8(kernel::memo::PageID page_id, uint32_t offset, uint8_t value) {
     if (physical_pages.find(page_id) == physical_pages.end())
-        throw kernel::error::page_fault("Physical page not found");
+        throw kernel::error::Page_fault("Physical page not found");
 
     kernel::memo::PhysicalPage& page = physical_pages.at(page_id);
     if (offset >= sizeof(page.data))
@@ -55,7 +55,7 @@ void kernel::memo::MemoryManager::write_u8(kernel::memo::PageID page_id, uint32_
 
 uint32_t kernel::memo::MemoryManager::read_u32(kernel::memo::PageID page_id, uint32_t offset) const {
     if (physical_pages.find(page_id) == physical_pages.end())
-        throw kernel::error::page_fault("Physical page not found");
+        throw kernel::error::Page_fault("Physical page not found");
 
     const kernel::memo::PhysicalPage& page = physical_pages.at(page_id);
     if (offset + 3 >= sizeof(page.data))
@@ -67,7 +67,7 @@ uint32_t kernel::memo::MemoryManager::read_u32(kernel::memo::PageID page_id, uin
 
 uint8_t kernel::memo::MemoryManager::read_u8(kernel::memo::PageID page_id, uint32_t offset) const {
     if (physical_pages.find(page_id) == physical_pages.end())
-        throw kernel::error::page_fault("Physical page not found");
+        throw kernel::error::Page_fault("Physical page not found");
 
     const kernel::memo::PhysicalPage& page = physical_pages.at(page_id);
     if (offset >= sizeof(page.data))
@@ -78,7 +78,7 @@ uint8_t kernel::memo::MemoryManager::read_u8(kernel::memo::PageID page_id, uint3
 
 void kernel::memo::MemoryManager::write_u32(kernel::memo::PageID page_id, uint32_t offset, uint32_t value) {
     if (physical_pages.find(page_id) == physical_pages.end())
-        throw kernel::error::page_fault("Physical page not found");
+        throw kernel::error::Page_fault("Physical page not found");
 
     kernel::memo::PhysicalPage& page = physical_pages.at(page_id);
     if (offset + 3 >= sizeof(page.data))

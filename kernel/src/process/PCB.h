@@ -42,17 +42,7 @@ class PCB
     std::size_t  _stackSize;                       // Size of the process's stack
 
    public:
-    PCB(int pid, int priority, int pc, int sp, int base, int limit, std::size_t stackSize) :
-        _pid(pid),
-        _priority(priority),
-        _state(NEW),
-        _pc(pc),
-        _sp(sp),
-        _base(base),
-        _limit(limit),
-        _stackSize(stackSize) {
-        _stack = new int[stackSize];  // Allocate memory for the stack
-    }
+    PCB(int pid, int priority, int pc, int sp, int base, int limit, std::size_t stackSize);
 
     ~PCB() {
         delete[] _stack;  // Free the allocated memory for the stack

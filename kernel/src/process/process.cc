@@ -46,7 +46,7 @@ kernel::proc::Process& kernel::proc::Process::operator=(const kernel::proc::Proc
 void kernel::proc::Process::write_to_virtual_page(kernel::memo::PageID vpage, int offset, char value) {
     // check if the virtual page is mapped
     if (this->page_table.entries.find(vpage) == this->page_table.entries.end())
-        throw kernel::error::page_fault("virtual page not mapped");
+        throw kernel::error::Page_fault("virtual page not mapped");
 
     // copy the page table entry metadata
     kernel::memo::PageTableEntry& entry     = this->page_table.entries[vpage];
@@ -86,30 +86,30 @@ void kernel::proc::Process::write_to_virtual_page(kernel::memo::PageID vpage, in
         }
         else
         {
-            throw kernel::error::segmentation_fault("Write access denied on page");
+            throw kernel::error::Segmentation_fault("Write access denied on page");
         }
     }
 
     // Write to physical memory
     kernel::memo::PhysicalPage& page = kernel::memo::memory_manager.get_page(entry.physical_page);
     if (offset < 0 || offset >= kernel::memo::PAGE_SIZE)
-        throw kernel::error::segmentation_fault("Offset out of bounds");
+        throw kernel::error::Segmentation_fault("Offset out of bounds");
 
     page.data[offset] = value;
 }
 
 char kernel::proc::Process::read_from_virtual_page(kernel::memo::PageID vpage, int offset) {
     if (this->page_table.entries.find(vpage) == this->page_table.entries.end())
-        throw kernel::error::page_fault("virtual page not mapped");
+        throw kernel::error::Page_fault("virtual page not mapped");
 
     kernel::memo::PageTableEntry& entry = this->page_table.entries[vpage];
     kernel::memo::PhysicalPage&   page  = kernel::memo::memory_manager.get_page(entry.physical_page);
 
     if (!(entry.flag & memo::PageFlags::READ))
-        throw kernel::error::page_fault("virtual page not readable");
+        throw kernel::error::Page_fault("virtual page not readable");
 
     if (offset < 0 || offset >= memo::PAGE_SIZE)
-        throw kernel::error::segmentation_fault("Offset out of bounds");
+        throw kernel::error::Segmentation_fault("Offset out of bounds");
 
     return page.data[offset];
 }
@@ -133,6 +133,15 @@ std::unique_ptr<kernel::proc::Process> kernel::proc::Process::fork_process(PID c
     return child;
 }
 
+void kernel::proc::Process::map_virtual_page(kernel::memo::PageID vpage, kernel::memo::PageID php_id) {
+    if (this->page_table.entries.find(vpage) != this->page_table.entries.end())
+        throw kernel::error::Page_fault("virtual page already mapped");
+
+    kernel::memo::PageTableEntry entry;
+    entry.physical_page = php_id;
+    entry.flag          = kernel::memo::PageFlags::READ | kernel::memo::PageFlags::WRITE;
+
+    this->page_table.entries[vpage] = entry;
 
 }  // namespace proc
 }  // namespace kernel

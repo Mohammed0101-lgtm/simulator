@@ -1,11 +1,11 @@
 #include "exit.h"
-#include <stdlib.h>
+#include <cstdlib>
 
 
 namespace kernel {
 namespace syscall {
 
-void __exit__(int status) { exit(status); }
+void sys_exit(int status) { std::exit(status); }
 
 }  // namespace syscall
 }  // namespace kernel

@@ -5,7 +5,7 @@
 
 
 int main() {
-    std::string directory = "/Users/mohamedrabbit/simulator/";  // Ensure this is correct
+    std::string directory = "/Users/mohamedrabbit/simulator/";
 
     try
     {
@@ -21,20 +21,21 @@ int main() {
         for (const auto& entry : std::filesystem::recursive_directory_iterator(directory))
         {
             if (entry.is_regular_file())
-            {  // Process only files, not directories
+            {
                 if (not(entry.path().extension() == ".mm" or entry.path().extension() == ".cc"
                         or entry.path().extension() == ".cpp" or entry.path().extension() == ".c"
-                        or entry.path().extension() == ".h" or entry.path().extension() == ".hpp"))
+                        or entry.path().extension() == ".h" or entry.path().extension() == ".hpp"
+                        or entry.path().extension() == ".md"))
                 {
                     continue;
                 }
 
-                std::ifstream file(entry.path());  // Use entry.path() to get the correct path
+                std::ifstream file(entry.path());
 
                 if (!file.is_open())
                 {
                     std::cerr << "Warning: Could not open file: " << entry.path() << std::endl;
-                    continue;  // Skip unreadable files instead of throwing
+                    continue;
                 }
 
                 std::string line;

@@ -1,5 +1,5 @@
-#ifndef __MALLOC_H__
-#define __MALLOC_H__
+#ifndef __READ_H__
+#define __READ_H__
 
 #include <memory>
 
@@ -8,9 +8,10 @@ namespace kernel {
 namespace syscall {
 
 template<typename _Tp>
-std::unique_ptr<_Tp> _malloc(const std::size_t size) noexcept;
+_Tp sys_read(const std::size_t addr);
 
 }  // namespace syscall
 }  // namespace kernel
 
-#endif  // __MALLOC_H__
+
+#endif  // __READ_H__

@@ -1,6 +1,8 @@
 #include "loader.h"
+#include "../../../cpu/cpu.h"
 #include "../../../memory/memory.h"
 #include "../../process.h"
+#include "execute.h"
 #include "header.h"
 #include "parser.h"
 
@@ -50,6 +52,14 @@ bool kernel::core::elf::ELF_Loader::load_elf(kernel::proc::Process& process, con
 
             // Load segments
             this->load_segments(parser, process);
+            // Load segments
+
+            // Setup stack
+            setup_stack(process);
+
+            // Initialize registers with entry point
+            kernel::cpu::CPU cpu;  // TOTO : this  is clearly wrong and should replaced
+            initialize_registers(process, parser.get_entry_point(), cpu);
         }
     }
 

@@ -20,13 +20,68 @@ struct PID
     bool operator!=(const PID& other) const { return value != other.value; }
 };
 
-typedef enum: int {
+enum class ProcessState : int {
     NEW,        // Process is being created
     READY,      // Process is ready to run
     RUNNING,    // Process is currently executing
     WAITING,    // Process is waiting for an event to occur
     TERMINATED  // Process has finished execution
-} ProcessState;
+};
+
+enum class FileType {
+    REGULAR,
+    DIRECTORY,
+    CHAR,
+    BLOCK,
+    FIFO,
+    SOCKET
+};
+
+enum class FileMode {
+    READ,
+    WRITE,
+    APPEND,
+    READ_WRITE
+};
+
+enum class FilePermission {
+    READ,
+    WRITE,
+    EXECUTE
+};
+
+enum class FileStatus {
+    OPEN,
+    CLOSED,
+    ERROR
+};
+
+enum class FileFlag {
+    O_RDONLY,
+    O_WRONLY,
+    O_RDWR,
+    O_APPEND,
+    O_CREAT,
+    O_TRUNC,
+    O_EXCL
+};
+
+class File
+{
+   public:
+    virtual ssize_t read(char* buffer, size_t size);
+    virtual ssize_t write(const char* buffer, size_t size);
+    virtual void    close();
+    virtual ~File() = default;
+};
+
+class ConsoleFile: public File
+{
+   public:
+    ssize_t read(char* buffer, size_t size) override;
+    ssize_t write(const char* buffer, size_t size) override;
+    void    close() override;
+};
 
 class PCB
 {
@@ -42,6 +97,9 @@ class PCB
     std::size_t  _stackSize;                       // Size of the process's stack
 
    public:
+    mutable std::unordered_map<int, std::shared_ptr<File>> _fd_table;
+    int _next_fd = 3;  // File descriptor table, starting from 3 (0, 1, 2 are reserved for stdin, stdout, stderr)
+
     PCB(int pid, int priority, int pc, int sp, int base, int limit, std::size_t stackSize);
 
     ~PCB() {

@@ -48,7 +48,7 @@ void kernel::memo::MemoryManager::write_u8(kernel::memo::PageID page_id, uint32_
 
     kernel::memo::PhysicalPage& page = physical_pages.at(page_id);
     if (offset >= sizeof(page.data))
-        throw kernel::error::segmentation_fault("Offset exceeds page size");
+        throw kernel::error::Segmentation_fault("Offset exceeds page size");
 
     page.data[offset] = value;
 }
@@ -59,7 +59,7 @@ uint32_t kernel::memo::MemoryManager::read_u32(kernel::memo::PageID page_id, uin
 
     const kernel::memo::PhysicalPage& page = physical_pages.at(page_id);
     if (offset + 3 >= sizeof(page.data))
-        throw kernel::error::segmentation_fault("Offset exceeds page size for 32-bit read");
+        throw kernel::error::Segmentation_fault("Offset exceeds page size for 32-bit read");
 
     return (page.data[offset] << 24) | (page.data[offset + 1] << 16) | (page.data[offset + 2] << 8)
          | (page.data[offset + 3]);
@@ -71,7 +71,7 @@ uint8_t kernel::memo::MemoryManager::read_u8(kernel::memo::PageID page_id, uint3
 
     const kernel::memo::PhysicalPage& page = physical_pages.at(page_id);
     if (offset >= sizeof(page.data))
-        throw kernel::error::segmentation_fault("Offset exceeds page size for 8-bit read");
+        throw kernel::error::Segmentation_fault("Offset exceeds page size for 8-bit read");
 
     return page.data[offset];
 }
@@ -82,7 +82,7 @@ void kernel::memo::MemoryManager::write_u32(kernel::memo::PageID page_id, uint32
 
     kernel::memo::PhysicalPage& page = physical_pages.at(page_id);
     if (offset + 3 >= sizeof(page.data))
-        throw kernel::error::segmentation_fault("Offset exceeds page size for 32-bit write");
+        throw kernel::error::Segmentation_fault("Offset exceeds page size for 32-bit write");
 
     page.data[offset]     = (value >> 24) & 0xFF;
     page.data[offset + 1] = (value >> 16) & 0xFF;

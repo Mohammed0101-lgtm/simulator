@@ -15,6 +15,10 @@ kernel::proc::PCB::PCB(int pid, int priority, int pc, int sp, int base, int limi
     _limit(limit),
     _stackSize(stackSize) {
     _stack = new int[stackSize];  // Allocate memory for the stack
+
+    this->_fd_table[0] = std::make_shared<kernel::proc::ConsoleFile>();  // stdin
+    this->_fd_table[1] = std::make_shared<kernel::proc::ConsoleFile>();  // stdout
+    this->_fd_table[2] = std::make_shared<kernel::proc::ConsoleFile>();  // stderr
 }
 
 // Getters

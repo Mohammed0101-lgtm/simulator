@@ -13,10 +13,10 @@ namespace cpu {
 
 struct CPU
 {
-    std::array<Register, 8> _registers;  // R0–R7
-    uint32_t                _pc;         // Program Counter
-    uint32_t                _sp;         // Stack Pointer
-    bool                    _halted = false;
+    std::array<Register, 8> _registers;       // R0–R7
+    uint32_t                _pc;              // Program Counter
+    uint32_t                _sp;              // Stack Pointer
+    bool                    _halted = false;  // Flag to indicate if CPU is halted
 
     CPU();
 

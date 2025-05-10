@@ -4,7 +4,7 @@
 namespace kernel {
 namespace syscall {
 
-void print(const std::string string_literal) { std::cout << string_literal; }
+void sys_print(const std::string string_literal) { std::cout << string_literal; }
 
 }  // syscall
 }  // kernel

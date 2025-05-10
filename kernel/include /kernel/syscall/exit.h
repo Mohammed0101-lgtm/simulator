@@ -5,7 +5,7 @@
 namespace kernel {
 namespace syscall {
 
-void __exit__(int status);
+void sys_exit(int status);
 
 }  // namespace syscall
 }  // namespace kernel

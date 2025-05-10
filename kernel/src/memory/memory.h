@@ -12,7 +12,9 @@ namespace memo {
 
 using PageID                           = int;
 constexpr int      PAGE_SIZE           = 4096;
-constexpr uint32_t STACK_START_ADDRESS = 0x7FFFFFFF;
+constexpr uint32_t STACK_START_ADDRESS = 0xC0000000;  // Top of user space
+constexpr uint32_t STACK_SIZE          = 0x00100000;  // 1 MB
+
 
 struct PageTableEntry
 {

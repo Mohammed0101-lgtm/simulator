@@ -3,6 +3,7 @@
 
 #include "../error.h"
 
+
 namespace kernel {
 namespace cpu {
 namespace instr {
@@ -24,6 +25,7 @@ Opcode	    Name	    Description
 
 /// mapping table
 typedef enum: int {
+    NOP     = 0x00,
     LOAD    = 0x01,
     STORE   = 0x02,
     MOV     = 0x03,
@@ -42,13 +44,8 @@ struct Instruction
     // later on we might add other stuff
 
     Instruction() = delete;  // should never use the default constructor
-    Instruction(int val) {
-        if (val < LOAD || (val > SYSCALL && val != HALT))
-            throw kernel::error::unknown_instruction("Error: Unknown instruction is not allowd.");
-        _value = static_cast<VALUE>(val);
-    }
-
-    bool operator==(const Instruction& other) const { return this->_value == other._value; }
+    Instruction(int val);
+    bool operator==(const Instruction& other) const;
 };
 
 }  // namespace instr

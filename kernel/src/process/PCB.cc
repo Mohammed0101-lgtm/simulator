@@ -4,6 +4,19 @@
 namespace kernel {
 namespace proc {
 
+// Constructor
+kernel::proc::PCB::PCB(int pid, int priority, int pc, int sp, int base, int limit, std::size_t stackSize) :
+    _pid(pid),
+    _priority(priority),
+    _state(kernel::proc::ProcessState::NEW),
+    _pc(pc),
+    _sp(sp),
+    _base(base),
+    _limit(limit),
+    _stackSize(stackSize) {
+    _stack = new int[stackSize];  // Allocate memory for the stack
+}
+
 // Getters
 ProcessState kernel::proc::PCB::getState() const { return _state; }
 PID          kernel::proc::PCB::getPID() const { return _pid; }

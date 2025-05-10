@@ -12,6 +12,7 @@ namespace kernel {
 namespace core {
 namespace elf {
 
+
 bool kernel::core::elf::ELF_Loader::load_elf(kernel::proc::Process& process, const std::string& filename) {
     // Open the ELF file
     std::ifstream elf_file(filename, std::ios::binary);
@@ -83,6 +84,13 @@ void kernel::core::elf::ELF_Loader::load_segments(const kernel::core::elf::ELF_P
             process.write_to_virtual_page(vaddr, i, 0);
     }
 }
+
+bool kernel::core::elf::ELF_Loader::is_valid_elf(const kernel::core::elf::Elf32_Ehdr& header) {
+    // Check magic number: 0x7F, 'E', 'L', 'F'
+    return header.e_ident[0] == 0x7F && header.e_ident[1] == 'E' && header.e_ident[2] == 'L'
+        && header.e_ident[3] == 'F';
+}
+
 
 }  // namespace elf
 }  // namespace core

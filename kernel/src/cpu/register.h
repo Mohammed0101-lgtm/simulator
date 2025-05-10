@@ -28,18 +28,12 @@ struct Register
 
    public:
     Register() = delete;  // Can't use default constructor
+    Register(const RegLabel label);
+    Register(const Register& other);
 
-    Register(const RegLabel label) :
-        _label(label),
-        _instruction(kernel::cpu::instr::VALUE::HALT) {}
-
-    Register(const Register& other) :
-        _label(other.getLabel()),
-        _instruction(other.getInstruction()) {}
-
-    RegLabel getLabel() const { return _label; }
-    void     setInstruction(const kernel::cpu::instr::Instruction instruction) noexcept { _instruction = instruction; }
-    kernel::cpu::instr::Instruction getInstruction() const { return _instruction; }
+    RegLabel                        getLabel() const;
+    void                            setInstruction(const kernel::cpu::instr::Instruction instruction) noexcept;
+    kernel::cpu::instr::Instruction getInstruction() const;
 };
 
 

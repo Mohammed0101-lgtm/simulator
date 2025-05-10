@@ -1,13 +1,21 @@
-#include "scheduler.h"
+#include "kernel/process/scheduler.h"
 
 
 namespace kernel {
 namespace proc {
 
 
-void kernel::proc::Scheduler::add_process(std::unique_ptr<kernel::proc::Process> process) {}
-void kernel::proc::Scheduler::block_current_process() {}
-void kernel::proc::Scheduler::unblock_process(kernel::proc::PID pid) {}
+void kernel::proc::Scheduler::add_process(std::unique_ptr<kernel::proc::Process> process) {
+    // TODO : implement this
+}
+
+void kernel::proc::Scheduler::block_current_process() {
+    // TODO : implement this
+}
+
+void kernel::proc::Scheduler::unblock_process(kernel::proc::PID pid) {
+    // TODO : implement this
+}
 
 void kernel::proc::Scheduler::run(int time_slices) {  // main simulation loop
     for (int tick = 0; tick < time_slices; ++tick)

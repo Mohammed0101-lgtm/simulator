@@ -3,7 +3,9 @@
         {
             "name": "Mac",
             "includePath": [
-                "${default}"
+                "${default}",
+                "/Users/mohamedrabbit/simulator/kernel/include/kernel",
+                "${workspaceFolder}/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

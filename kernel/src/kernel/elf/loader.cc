@@ -1,21 +1,20 @@
-#include "loader.h"
-#include "../../../cpu/cpu.h"
-#include "../../../memory/memory.h"
-#include "../../process.h"
-#include "execute.h"
-#include "header.h"
-#include "parser.h"
+#include "elf/loader.h"
+#include "cpu/cpu.h"
+#include "elf/execute.h"
+#include "elf/header.h"
+#include "elf/parser.h"
+#include "memory/memory.h"
+#include "process/process.h"
 
 #include <fstream>
 #include <string>
 
 
 namespace kernel {
-namespace core {
 namespace elf {
 
 
-bool kernel::core::elf::ELF_Loader::load_elf(kernel::proc::Process& process, const std::string& filename) {
+bool kernel::elf::ELF_Loader::load_elf(kernel::proc::Process& process, const std::string& filename) {
     // Open the ELF file
     std::ifstream elf_file(filename, std::ios::binary);
     if (!elf_file.is_open())
@@ -25,7 +24,7 @@ bool kernel::core::elf::ELF_Loader::load_elf(kernel::proc::Process& process, con
     }
 
     // Read and validate ELF header
-    kernel::core::elf::Elf32_Ehdr elf_header;
+    kernel::elf::Elf32_Ehdr elf_header;
     elf_file.read(reinterpret_cast<char*>(&elf_header), sizeof(elf_header));
     if (elf_header.e_ident[0] != 0x7F || elf_header.e_ident[1] != 'E' || elf_header.e_ident[2] != 'L'
         || elf_header.e_ident[3] != 'F')
@@ -38,12 +37,12 @@ bool kernel::core::elf::ELF_Loader::load_elf(kernel::proc::Process& process, con
     elf_file.seekg(elf_header.e_phoff, std::ios::beg);
     for (int i = 0; i < elf_header.e_phnum; ++i)
     {
-        kernel::core::elf::Elf32_Phdr phdr;
+        kernel::elf::Elf32_Phdr phdr;
         elf_file.read(reinterpret_cast<char*>(&phdr), sizeof(phdr));
 
         if (phdr.p_type == PT_LOAD)
         {
-            kernel::core::elf::ELF_Parser parser(filename);
+            kernel::elf::ELF_Parser parser(filename);
             if (!parser.is_valid())
             {
                 std::cerr << "Invalid ELF format\n";
@@ -73,8 +72,7 @@ bool kernel::core::elf::ELF_Loader::load_elf(kernel::proc::Process& process, con
     return true;
 }
 
-void kernel::core::elf::ELF_Loader::load_segments(const kernel::core::elf::ELF_Parser& elf_parser,
-                                                  kernel::proc::Process&               process) {
+void kernel::elf::ELF_Loader::load_segments(const kernel::elf::ELF_Parser& elf_parser, kernel::proc::Process& process) {
     for (const auto& ph : elf_parser.get_program_headers())
     {
         if (ph.p_type != PT_LOAD)
@@ -95,7 +93,7 @@ void kernel::core::elf::ELF_Loader::load_segments(const kernel::core::elf::ELF_P
     }
 }
 
-bool kernel::core::elf::ELF_Loader::is_valid_elf(const kernel::core::elf::Elf32_Ehdr& header) {
+bool kernel::elf::ELF_Loader::is_valid_elf(const kernel::elf::Elf32_Ehdr& header) {
     // Check magic number: 0x7F, 'E', 'L', 'F'
     return header.e_ident[0] == 0x7F && header.e_ident[1] == 'E' && header.e_ident[2] == 'L'
         && header.e_ident[3] == 'F';
@@ -103,5 +101,4 @@ bool kernel::core::elf::ELF_Loader::is_valid_elf(const kernel::core::elf::Elf32_
 
 
 }  // namespace elf
-}  // namespace core
 }  // namespace kernel

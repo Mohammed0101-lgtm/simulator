@@ -6,7 +6,6 @@
 
 
 namespace kernel {
-namespace core {
 namespace elf {
 
 
@@ -31,7 +30,6 @@ class ELF_Parser
 
 
 }  // kernel
-}  // core
 }  // elf
 
 

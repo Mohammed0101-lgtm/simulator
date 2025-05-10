@@ -1,14 +1,13 @@
-#include "parser.h"
+#include "elf/parser.h"
 #include <cstring>
 #include <fstream>
 #include <iostream>
 
 
 namespace kernel {
-namespace core {
 namespace elf {
 
-kernel::core::elf::ELF_Parser::ELF_Parser(const std::string& elf_path) {
+kernel::elf::ELF_Parser::ELF_Parser(const std::string& elf_path) {
     std::ifstream file(elf_path, std::ios::binary);
     if (!file)
     {
@@ -30,16 +29,15 @@ kernel::core::elf::ELF_Parser::ELF_Parser(const std::string& elf_path) {
     parse();
 }
 
-bool kernel::core::elf::ELF_Parser::is_valid() const { return _valid; }
+bool kernel::elf::ELF_Parser::is_valid() const { return this->_valid; }
 
-uint32_t kernel::core::elf::ELF_Parser::get_entry_point() const { return _header.e_entry; }
+uint32_t kernel::elf::ELF_Parser::get_entry_point() const { return this->_header.e_entry; }
 
-const std::vector<kernel::core::elf::Elf32_Phdr>& kernel::core::elf::ELF_Parser::get_program_headers() const {
-    return _program_headers;
+const std::vector<kernel::elf::Elf32_Phdr>& kernel::elf::ELF_Parser::get_program_headers() const {
+    return this->_program_headers;
 }
 
-const std::vector<uint8_t>&
-kernel::core::elf::ELF_Parser::get_segment_data(const kernel::core::elf::Elf32_Phdr& ph) const {
+const std::vector<uint8_t>& kernel::elf::ELF_Parser::get_segment_data(const kernel::elf::Elf32_Phdr& ph) const {
     static std::vector<uint8_t> segment;
     if (ph.p_offset + ph.p_filesz > _elf_data.size())
         throw std::runtime_error("Segment data out of bounds");
@@ -48,45 +46,44 @@ kernel::core::elf::ELF_Parser::get_segment_data(const kernel::core::elf::Elf32_P
     return segment;
 }
 
-void kernel::core::elf::ELF_Parser::parse() {
+void kernel::elf::ELF_Parser::parse() {
     // Check file size
-    if (_elf_data.size() < sizeof(kernel::core::elf::Elf32_Ehdr))
+    if (this->_elf_data.size() < sizeof(kernel::elf::Elf32_Ehdr))
     {
         std::cerr << "ELF file too small\n";
         return;
     }
 
     // Copy ELF header
-    std::memcpy(&_header, &_elf_data[0], sizeof(kernel::core::elf::Elf32_Ehdr));
+    std::memcpy(&this->_header, &this->_elf_data[0], sizeof(kernel::elf::Elf32_Ehdr));
 
     // Check magic number
-    if (_header.e_ident[0] != 0x7F || _header.e_ident[1] != 'E' || _header.e_ident[2] != 'L'
-        || _header.e_ident[3] != 'F')
+    if (this->_header.e_ident[0] != 0x7F || this->_header.e_ident[1] != 'E' || this->_header.e_ident[2] != 'L'
+        || this->_header.e_ident[3] != 'F')
     {
         std::cerr << "Invalid ELF magic\n";
         return;
     }
 
     // Check class (32-bit)
-    if (_header.e_ident[4] != 1)
+    if (this->_header.e_ident[4] != 1)
     {
         std::cerr << "Unsupported ELF class (only 32-bit supported)\n";
         return;
     }
 
     // Parse program headers
-    const uint8_t* ph_table = &_elf_data[0] + _header.e_phoff;
-    for (int i = 0; i < _header.e_phnum; ++i)
+    const uint8_t* ph_table = &this->_elf_data[0] + this->_header.e_phoff;
+    for (int i = 0; i < this->_header.e_phnum; ++i)
     {
-        kernel::core::elf::Elf32_Phdr ph;
-        std::memcpy(&ph, ph_table + i * _header.e_phentsize, sizeof(kernel::core::elf::Elf32_Phdr));
-        _program_headers.push_back(ph);
+        kernel::elf::Elf32_Phdr ph;
+        std::memcpy(&ph, ph_table + i * this->_header.e_phentsize, sizeof(kernel::elf::Elf32_Phdr));
+        this->_program_headers.push_back(ph);
     }
 
-    _valid = true;
+    this->_valid = true;
 }
 
 
 }  // namespace elf
-}  // namespace core
 }  // namespace kernel

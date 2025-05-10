@@ -1,13 +1,12 @@
 #ifndef __EXECUTE_H__
 #define __EXECUTE_H__
 
-#include "../../../cpu/cpu.h"
-#include "../../../memory/memory.h"
-#include "../../process.h"
+#include "../cpu/cpu.h"
+#include "../memory/memory.h"
+#include "../process/process.h"
 
 
 namespace kernel {
-namespace core {
 namespace elf {
 
 
@@ -89,7 +88,6 @@ void setup_stack(kernel::proc::Process& process, const std::vector<std::string>&
 
 
 }  // namespace elf
-}  // namespace core
 }  // namespace kernel
 
 

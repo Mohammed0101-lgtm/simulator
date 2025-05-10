@@ -1,5 +1,5 @@
-#include "process.h"
-#include "../error.h"
+#include "kernel/process/process.h"
+#include "kernel/error.h"
 
 #include <memory>
 
@@ -41,7 +41,6 @@ kernel::proc::Process& kernel::proc::Process::operator=(const kernel::proc::Proc
 
     return *this;
 }
-
 
 void kernel::proc::Process::write_to_virtual_page(kernel::memo::PageID vpage, int offset, char value) {
     // check if the virtual page is mapped
@@ -142,6 +141,7 @@ void kernel::proc::Process::map_virtual_page(kernel::memo::PageID vpage, kernel:
     entry.flag          = kernel::memo::PageFlags::READ | kernel::memo::PageFlags::WRITE;
 
     this->page_table.entries[vpage] = entry;
+}
 
 }  // namespace proc
 }  // namespace kernel

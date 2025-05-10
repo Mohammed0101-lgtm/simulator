@@ -1,5 +1,5 @@
-#include "cpu.h"
-#include "instruction.h"
+#include "cpu/cpu.h"
+#include "cpu/instruction.h"
 
 
 namespace kernel {

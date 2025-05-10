@@ -13,7 +13,7 @@ void panic(const std::string& msg, kernel::cpu::CPU& cpu) {
     std::cerr << "Registers:\n";
 
     for (int i = 0; i < 8; ++i)
-        std::cerr << "R" << i << ": " << std::hex << cpu._regs[i].getInstruction()._value << "\n";
+        std::cerr << "R" << i << ": " << std::hex << cpu._registers[i].getInstruction()._value << "\n";
 
     throw kernel::error::Panic_kernel(msg);
     // Optionally, you can also print the instruction that caused the panic

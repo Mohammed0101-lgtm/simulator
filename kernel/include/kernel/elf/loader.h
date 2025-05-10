@@ -2,13 +2,13 @@
 #define __ELFLOADER_H__
 
 #include "../../memory.h"
-#include "../../process.h"
+#include "../process/process.h"
 #include "header.h"
+#include "parser.h"
 #include <string>
 
 
 namespace kernel {
-namespace core {
 namespace elf {
 
 class ELF_Loader
@@ -20,7 +20,6 @@ class ELF_Loader
 };
 
 }  // namespace elf
-}  // namespace core
 }  // namespace kernel
 
 

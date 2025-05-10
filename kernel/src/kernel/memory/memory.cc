@@ -1,5 +1,5 @@
-#include "memory.h"
-#include "../error.h"
+#include "memory/memory.h"
+#include "error.h"
 
 #include <iostream>
 

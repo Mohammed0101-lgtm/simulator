@@ -4,10 +4,12 @@
 
 #include <cstdint>
 
+
 namespace kernel {
 namespace elf {
 
 constexpr uint8_t ELF_MAGIC[] = {0x7F, 'E', 'L', 'F'};
+
 
 struct Elf32_Ehdr
 {
@@ -52,5 +54,6 @@ enum Elf_ProgramType : int {
 
 }  // namespace elf
 }  // namespace elf
+
 
 #endif  // __ELFHEADER_H__

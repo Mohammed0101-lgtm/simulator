@@ -9,15 +9,15 @@ namespace proc {
 
 struct PID
 {
-    int value;
+    int _value;
 
     // Constructors
     PID(int v) :
-        value(v) {}
+        _value(v) {}
 
     // Equality operators
-    bool operator==(const PID& other) const { return value == other.value; }
-    bool operator!=(const PID& other) const { return value != other.value; }
+    bool operator==(const PID& other) const { return this->_value == other._value; }
+    bool operator!=(const PID& other) const { return this->_value != other._value; }
 };
 
 enum class ProcessState : int {

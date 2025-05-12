@@ -34,6 +34,12 @@ typedef enum: int {
     SUB     = 0x06,
     JMP     = 0x07,
     BEQ     = 0x08,
+    AND     = 0x0A,
+    OR      = 0x0B,
+    XOR     = 0x0C,
+    NOT     = 0x0D,
+    SHL     = 0x0E,
+    SHR     = 0x0F,
     SYSCALL = 0x09,
     HALT    = 0xFF
 } VALUE;

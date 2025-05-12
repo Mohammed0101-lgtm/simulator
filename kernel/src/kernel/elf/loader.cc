@@ -63,8 +63,8 @@ bool kernel::elf::ELF_Loader::load_elf(kernel::proc::Process& process, const std
     }
 
     // Set up the program's entry point and stack pointer
-    process.process_control_block->setPC(elf_header.e_entry);
-    process.process_control_block->setSP(kernel::memo::STACK_START_ADDRESS);  // Set to appropriate value
+    process._process_control_block->setPC(elf_header.e_entry);
+    process._process_control_block->setSP(kernel::memo::STACK_START_ADDRESS);  // Set to appropriate value
 
     // Start the execution of the program (run the instructions)
     // start_execution();

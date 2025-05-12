@@ -18,34 +18,34 @@ constexpr uint32_t STACK_SIZE          = 0x00100000;  // 1 MB
 
 struct PageTableEntry
 {
-    PageID physical_page;
-    int    flag;
+    PageID _physical_page;
+    int    _flag;
 };
 
 struct PageTable
 {
-    std::unordered_map<PageID, PageTableEntry> entries;
+    std::unordered_map<PageID, PageTableEntry> _entries;
 };
 
 struct PhysicalPage
 {
-    int                     ref_count = 0;
-    std::unique_ptr<char[]> data;
+    int                     _ref_count = 0;
+    std::unique_ptr<char[]> _data;
 
     PhysicalPage() :
-        data(new char[PAGE_SIZE]) {}  // Assuming page size is 4096 bytes
+        _data(new char[PAGE_SIZE]) {}  // Assuming page size is 4096 bytes
 };
 
 struct VirtualPage
 {
-    PageID            page_id;
-    kernel::proc::PID pid;
-    int               offset;
+    PageID            _page_id;
+    kernel::proc::PID _pid;
+    int               _offset;
 
     VirtualPage(PageID id, kernel::proc::PID process_id, int off) :
-        page_id(id),
-        pid(process_id),
-        offset(off) {}
+        _page_id(id),
+        _pid(process_id),
+        _offset(off) {}
 };
 
 enum PageFlags {
@@ -56,9 +56,9 @@ enum PageFlags {
 
 struct MemoryManager
 {
-    std::unordered_map<PageID, PhysicalPage> physical_pages;
-    PageID                                   next_page_id = 0;
-    uint8_t                                  simulated_memory[65536];  // 64KB
+    std::unordered_map<PageID, PhysicalPage> _physical_pages;
+    PageID                                   _next_page_id = 0;
+    uint8_t                                  _simulated_memory[65536];  // 64KB
 
     PageID        allocate_physical_page();
     void          increment_ref(PageID page);

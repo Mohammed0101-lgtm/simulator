@@ -12,8 +12,8 @@ namespace proc {
 class Process
 {
    public:
-    std::unique_ptr<proc::PCB> process_control_block;
-    kernel::memo::PageTable    page_table;
+    std::unique_ptr<proc::PCB> _process_control_block;
+    kernel::memo::PageTable    _page_table;
 
     Process() = default;
 

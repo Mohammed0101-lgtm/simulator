@@ -13,13 +13,13 @@ kernel::cpu::Register::Register(const Register& other) :
     _label(other.getLabel()),
     _instruction(other.getInstruction()) {}
 
-kernel::cpu::RegLabel kernel::cpu::Register::getLabel() const { return _label; }
+kernel::cpu::RegLabel kernel::cpu::Register::getLabel() const { return this->_label; }
 
 void kernel::cpu::Register::setInstruction(const kernel::cpu::instr::Instruction instruction) noexcept {
-    _instruction = instruction;
+    this->_instruction = instruction;
 }
 
-kernel::cpu::instr::Instruction kernel::cpu::Register::getInstruction() const { return _instruction; }
+kernel::cpu::instr::Instruction kernel::cpu::Register::getInstruction() const { return this->_instruction; }
 
 
 }  // namespace cpu

@@ -10,20 +10,20 @@ namespace proc {
 
 explicit kernel::proc::Process::Process(
   int pid, int priority, int pc, int sp, int base, int limit, std::size_t stackSize) {
-    process_control_block =
+    this->_process_control_block =
       std::make_unique<kernel::proc::PCB>(kernel::proc::PCB(pid, priority, pc, sp, base, limit, stackSize));
-    page_table.entries.clear();  // Initialize the page table
+    this->_page_table._entries.clear();  // Initialize the page table
 }
 
 explicit kernel::proc::Process::Process(kernel::proc::Process&& process) :
-    process_control_block(std::move(process.process_control_block)),
-    page_table(std::move(process.page_table)) {}
+    _process_control_block(std::move(process._process_control_block)),
+    _page_table(std::move(process._page_table)) {}
 
 explicit kernel::proc::Process::Process(const kernel::proc::Process& process) {
-    if (process.process_control_block)
-        process_control_block = std::make_unique<kernel::proc::PCB>(*process.process_control_block);
+    if (process._process_control_block)
+        this->_process_control_block = std::make_unique<kernel::proc::PCB>(*process._process_control_block);
 
-    page_table = process.page_table;  // Assumes PageTable and its entries support deep copy
+    _page_table = process._page_table;  // Assumes PageTable and its entries support deep copy
 }
 
 kernel::proc::Process& kernel::proc::Process::operator=(const kernel::proc::Process& other) {
@@ -31,29 +31,29 @@ kernel::proc::Process& kernel::proc::Process::operator=(const kernel::proc::Proc
         return *this;
 
     // Deep copy PCB
-    if (other.process_control_block)
-        process_control_block = std::make_unique<kernel::proc::PCB>(*other.process_control_block);
+    if (other._process_control_block)
+        this->_process_control_block = std::make_unique<kernel::proc::PCB>(*other._process_control_block);
     else
-        process_control_block.reset();
+        this->_process_control_block.reset();
 
     // Deep copy page table
-    page_table = other.page_table;
+    this->_page_table = other._page_table;
 
     return *this;
 }
 
 void kernel::proc::Process::write_to_virtual_page(kernel::memo::PageID vpage, int offset, char value) {
     // check if the virtual page is mapped
-    if (this->page_table.entries.find(vpage) == this->page_table.entries.end())
+    if (this->_page_table._entries.find(vpage) == this->_page_table._entries.end())
         throw kernel::error::Page_fault("virtual page not mapped");
 
     // copy the page table entry metadata
-    kernel::memo::PageTableEntry& entry     = this->page_table.entries[vpage];
-    kernel::memo::PageID          phpage_id = entry.physical_page;
+    kernel::memo::PageTableEntry& entry     = this->_page_table._entries[vpage];
+    kernel::memo::PageID          phpage_id = entry._physical_page;
 
     // Check if page is writable
-    bool is_writable = entry.flag & kernel::memo::PageFlags::WRITE;
-    bool is_cow      = entry.flag & kernel::memo::PageFlags::COW;
+    bool is_writable = entry._flag & kernel::memo::PageFlags::WRITE;
+    bool is_cow      = entry._flag & kernel::memo::PageFlags::COW;
 
     if (is_writable == false)
     {
@@ -68,19 +68,19 @@ void kernel::proc::Process::write_to_virtual_page(kernel::memo::PageID vpage, in
 
             // Copy data from shared page to new page copy
             kernel::memo::memory_manager.increment_ref(new_phpage_id);
-            new_page.data = std::make_unique<char[]>(kernel::memo::PAGE_SIZE);
-            std::memcpy(new_page.data.get(), shared_page.data.get(), kernel::memo::PAGE_SIZE);
-            new_page.data = std::move(new_page.data);
+            new_page._data = std::make_unique<char[]>(kernel::memo::PAGE_SIZE);
+            std::memcpy(new_page._data.get(), shared_page._data.get(), kernel::memo::PAGE_SIZE);
+            new_page._data = std::move(new_page._data);
 
             // Update ref counts
             kernel::memo::memory_manager.decrement_ref(phpage_id);
-            entry.physical_page = new_phpage_id;
+            entry._physical_page = new_phpage_id;
 
             // Update flags
-            entry.flag &= ~kernel::memo::PageFlags::COW;
-            entry.flag |= kernel::memo::PageFlags::WRITE;
+            entry._flag &= ~kernel::memo::PageFlags::COW;
+            entry._flag |= kernel::memo::PageFlags::WRITE;
 
-            std::cout << "COW triggered: Process " << this->process_control_block->getPID().value << " now owns page "
+            std::cout << "COW triggered: Process " << this->_process_control_block->getPID()._value << " now owns page "
                       << new_phpage_id << "\n";
         }
         else
@@ -90,27 +90,27 @@ void kernel::proc::Process::write_to_virtual_page(kernel::memo::PageID vpage, in
     }
 
     // Write to physical memory
-    kernel::memo::PhysicalPage& page = kernel::memo::memory_manager.get_page(entry.physical_page);
+    kernel::memo::PhysicalPage& page = kernel::memo::memory_manager.get_page(entry._physical_page);
     if (offset < 0 || offset >= kernel::memo::PAGE_SIZE)
         throw kernel::error::Segmentation_fault("Offset out of bounds");
 
-    page.data[offset] = value;
+    page._data[offset] = value;
 }
 
 char kernel::proc::Process::read_from_virtual_page(kernel::memo::PageID vpage, int offset) {
-    if (this->page_table.entries.find(vpage) == this->page_table.entries.end())
+    if (this->_page_table._entries.find(vpage) == this->_page_table._entries.end())
         throw kernel::error::Page_fault("virtual page not mapped");
 
-    kernel::memo::PageTableEntry& entry = this->page_table.entries[vpage];
-    kernel::memo::PhysicalPage&   page  = kernel::memo::memory_manager.get_page(entry.physical_page);
+    kernel::memo::PageTableEntry& entry = this->_page_table._entries[vpage];
+    kernel::memo::PhysicalPage&   page  = kernel::memo::memory_manager.get_page(entry._physical_page);
 
-    if (!(entry.flag & memo::PageFlags::READ))
+    if (!(entry._flag & memo::PageFlags::READ))
         throw kernel::error::Page_fault("virtual page not readable");
 
     if (offset < 0 || offset >= memo::PAGE_SIZE)
         throw kernel::error::Segmentation_fault("Offset out of bounds");
 
-    return page.data[offset];
+    return page._data[offset];
 }
 
 std::unique_ptr<kernel::proc::Process> kernel::proc::Process::fork_process(PID child_pid) {
@@ -118,29 +118,29 @@ std::unique_ptr<kernel::proc::Process> kernel::proc::Process::fork_process(PID c
       std::make_unique<kernel::proc::Process>(/* possibly pass child PID and metadata */ kernel::proc::Process());
 
     // Manually copy deep data from `*this` into *child
-    child->process_control_block = std::make_unique<kernel::proc::PCB>(*this->process_control_block);
+    child->_process_control_block = std::make_unique<kernel::proc::PCB>(*this->_process_control_block);
 
-    for (const auto& [vpage, entry] : this->page_table.entries)
+    for (const auto& [vpage, entry] : this->_page_table._entries)
     {
-        kernel::memo::memory_manager.increment_ref(entry.physical_page);
+        kernel::memo::memory_manager.increment_ref(entry._physical_page);
         kernel::memo::PageTableEntry new_entry = entry;
-        new_entry.flag &= ~kernel::memo::PageFlags::WRITE;
-        new_entry.flag |= kernel::memo::PageFlags::COW;
-        child->page_table.entries[vpage] = new_entry;
+        new_entry._flag &= ~kernel::memo::PageFlags::WRITE;
+        new_entry._flag |= kernel::memo::PageFlags::COW;
+        child->_page_table._entries[vpage] = new_entry;
     }
 
     return child;
 }
 
 void kernel::proc::Process::map_virtual_page(kernel::memo::PageID vpage, kernel::memo::PageID php_id) {
-    if (this->page_table.entries.find(vpage) != this->page_table.entries.end())
+    if (this->_page_table._entries.find(vpage) != this->_page_table._entries.end())
         throw kernel::error::Page_fault("virtual page already mapped");
 
     kernel::memo::PageTableEntry entry;
-    entry.physical_page = php_id;
-    entry.flag          = kernel::memo::PageFlags::READ | kernel::memo::PageFlags::WRITE;
+    entry._physical_page = php_id;
+    entry._flag          = kernel::memo::PageFlags::READ | kernel::memo::PageFlags::WRITE;
 
-    this->page_table.entries[vpage] = entry;
+    this->_page_table._entries[vpage] = entry;
 }
 
 }  // namespace proc

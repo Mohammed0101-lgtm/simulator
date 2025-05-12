@@ -29,16 +29,16 @@ void kernel::proc::Scheduler::run(int time_slices) {  // main simulation loop
         std::unique_ptr<kernel::proc::Process> process = std::move(this->_ready_queue.front());
         this->_ready_queue.pop();
 
-        kernel::proc::PCB& pcb = *process->process_control_block;
+        kernel::proc::PCB& pcb = *process->_process_control_block;
         pcb.setState(kernel::proc::ProcessState::RUNNING);
 
-        std::cout << "[Scheduler] Running process of PID : " << pcb.getPID().value << "\n";
+        std::cout << "[Scheduler] Running process of PID : " << pcb.getPID()._value << "\n";
 
         // Simulate process executing
         // For now, just assume it completes after one slice (one clock tick)
         pcb.setState(kernel::proc::ProcessState::TERMINATED);
 
-        std::cout << "[Scheduler] Process PID : " << pcb.getPID().value << " terminated.\n";
+        std::cout << "[Scheduler] Process PID : " << pcb.getPID()._value << " terminated.\n";
         // If you want to support yielding or time slicing, requeue instead of terminating
     }
 }

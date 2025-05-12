@@ -25,7 +25,7 @@ void setup_stack(kernel::proc::Process& process) {
     }
 
     // Set the initial stack pointer
-    process.process_control_block->setSP(STACK_START);
+    process._process_control_block->setSP(STACK_START);
 }
 
 void initialize_registers(kernel::proc::Process& process, uint32_t entry_point, kernel::cpu::CPU& cpu) {
@@ -34,7 +34,7 @@ void initialize_registers(kernel::proc::Process& process, uint32_t entry_point, 
         cpu._registers[i].setInstruction(kernel::cpu::instr::VALUE::NOP);
 
     // Set Program Counter (PC) in the process control block to entry point
-    process.process_control_block->setPC(entry_point);
+    process._process_control_block->setPC(entry_point);
 
     // Stack Pointer (SP) will be set separately in setup_stack()
 }
@@ -83,7 +83,7 @@ void setup_stack(kernel::proc::Process& process, const std::vector<std::string>&
         process.write_to_virtual_page(sp, b, (argc >> ((3 - b) * 8)) & 0xFF);
 
     // Step 5: Set stack pointer
-    process.process_control_block->setSP(sp);
+    process._process_control_block->setSP(sp);
 }
 
 

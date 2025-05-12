@@ -7,12 +7,13 @@ namespace instr {
 
 
 kernel::cpu::instr::Instruction::Instruction(int val) {
-    if (val < LOAD || (val > SYSCALL && val != HALT))
+    if (val < kernel::cpu::instr::VALUE::LOAD
+        || (val > kernel::cpu::instr::VALUE::SYSCALL && val != kernel::cpu::instr::VALUE::HALT))
         throw kernel::error::Unknown_instruction("Error: Unknown instruction is not allowed.");
     _value = static_cast<VALUE>(val);
 }
 
-bool kernel::cpu::instr::Instruction::operator==(const Instruction& other) const {
+bool kernel::cpu::instr::Instruction::operator==(const kernel::cpu::instr::Instruction& other) const {
     return this->_value == other._value;
 }
 

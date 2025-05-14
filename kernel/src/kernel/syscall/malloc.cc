@@ -1,4 +1,4 @@
-#include "syscall/malloc.h"
+#include "syscall/malloc.hh"
 
 
 namespace kernel {

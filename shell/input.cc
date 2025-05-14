@@ -2,8 +2,8 @@
 // input.cc
 //
 
-#include "input.h"
-#include "config.h"
+#include "input.hh"
+#include "config.hh"
 
 #include <algorithm>
 #include <iostream>

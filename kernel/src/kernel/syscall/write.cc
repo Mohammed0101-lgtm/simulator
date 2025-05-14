@@ -1,4 +1,4 @@
-#include "syscall/write.h"
+#include "syscall/write.hh"
 
 
 namespace kernel {

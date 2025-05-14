@@ -1,5 +1,5 @@
-#include "../command.h"
-#include "../config.h"
+#include "../command.hh"
+#include "../config.hh"
 #include <filesystem>
 #include <fstream>
 #include <gtest/gtest.h>

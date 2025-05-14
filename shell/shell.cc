@@ -1,7 +1,7 @@
-#include "shell.h"
-#include "command.h"
-#include "config.h"
-#include "input.h"
+#include "shell.hh"
+#include "command.hh"
+#include "config.hh"
+#include "input.hh"
 
 #include <filesystem>
 #include <iostream>

@@ -1,4 +1,4 @@
-#include "syscall/print.h"
+#include "syscall/print.hh"
 #include <iostream>
 
 

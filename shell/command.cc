@@ -1,5 +1,13 @@
-#include "command.h"
-#include "config.h"
+#include "command.hh"
+#include "config.hh"
+#include "error.h"
+#include "syscall/close.hh"
+#include "syscall/exit.hh"
+#include "syscall/malloc.hh"
+#include "syscall/open.hh"
+#include "syscall/print.hh"
+#include "syscall/read.hh"
+#include "syscall/write.hh"
 
 #include <algorithm>
 #include <fcntl.h>
@@ -531,4 +539,20 @@ int Command_Impl::run(const std::vector<std::string>& args) {
     return _SUCCESS;
 }
 
-int Command_Impl::head(const std::vector<std::string>& args) {}
+int Command_Impl::head(const std::vector<std::string>& args) {
+    if (args.empty())
+    {
+        std::cerr << "Not enough arguments." << std::endl;
+        return _ERROR;
+        // throw Command_error("Not enough arguments.");
+    }
+
+    if (!fs::exists(args[0]))
+    {
+        std::cerr << "Error: path does not exist." << std::endl;
+        return _ERROR;
+        // throw Command_error("Not enough arguments.");
+    }
+
+    // TODO: READ FILE and print it's head
+}

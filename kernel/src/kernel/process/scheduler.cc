@@ -1,4 +1,4 @@
-#include "kernel/process/scheduler.h"
+#include "process/scheduler.hh"
 
 
 namespace kernel {
@@ -17,8 +17,8 @@ void kernel::proc::Scheduler::unblock_process(kernel::proc::PID pid) {
     // TODO : implement this
 }
 
-void kernel::proc::Scheduler::run(int time_slices) {  // main simulation loop
-    for (int tick = 0; tick < time_slices; ++tick)
+void kernel::proc::Scheduler::run() {  // main simulation loop
+    for (;;)
     {
         if (this->_ready_queue.empty())
         {

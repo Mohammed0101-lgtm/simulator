@@ -1,4 +1,4 @@
-#include "syscall/exit.h"
+#include "syscall/exit.hh"
 #include <cstdlib>
 
 

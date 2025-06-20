@@ -1,5 +1,5 @@
-#include "command.hh"
-#include "config.hh"
+#include "command.h"
+#include "config.h"
 #include "error.h"
 #include "syscall/close.hh"
 #include "syscall/exit.hh"
@@ -27,35 +27,65 @@ namespace fs = std::filesystem;
 
 int Command_Impl::execute_command(const std::string& command, const std::vector<std::string>& args) {
     if (command == "pwd")
+    {
         return this->pwd(args);
+    }
     else if (command == "cd")
+    {
         return this->cd(args);
+    }
     else if (command == "ls")
+    {
         return this->ls(args);
+    }
     else if (command == "mkdir")
+    {
         return this->mkdir(args);
+    }
     else if (command == "rmdir")
+    {
         return this->rmdir(args);
+    }
     else if (command == "rm")
+    {
         return this->rm(args);
+    }
     else if (command == "cp")
+    {
         return this->cp(args);
+    }
     else if (command == "mv")
+    {
         return this->mv(args);
+    }
     else if (command == "touch")
+    {
         return this->touch(args);
+    }
     else if (command == "cat")
+    {
         return this->cat(args);
+    }
     else if (command == "echo")
+    {
         return this->echo(args);
+    }
     else if (command == "clear")
+    {
         return this->clear(args);
+    }
     else if (command == "open")
+    {
         return this->_open(args);
+    }
     else if (command == "run")
+    {
         return this->run(args);
+    }
     else if (command == "head")
+    {
         return this->head(args);
+    }
     else
     {
         std::cerr << "Error: Command not found." << std::endl;
@@ -94,9 +124,13 @@ int Command_Impl::execute(const std::string& command, const std::vector<std::str
     {
         waitpid(pid, &status, 0);
         if (WIFEXITED(status))
+        {
             return WEXITSTATUS(status);
+        }
         else
+        {
             return _ERROR;
+        }
     }
 
     return WEXITSTATUS(status);
@@ -104,15 +138,20 @@ int Command_Impl::execute(const std::string& command, const std::vector<std::str
 
 inline int getTerminalWidth() {
     struct winsize w;
+
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == -1)
+    {
         return 80;  // fallback to default width
+    }
 
     return w.ws_col;
 }
 
 int Command_Impl::recdir(const std::string& path) {
     if (path.empty())
+    {
         return _ERROR;
+    }
 
     if (!fs::exists(path))
     {
@@ -150,7 +189,9 @@ int Command_Impl::recdir(const std::string& path) {
         std::cout << std::left << std::setw(separation) << file;
         ++count;
         if (count % columns == 0)
+        {
             std::cout << '\n';
+        }
     }
 
     std::cout << std::endl;
@@ -205,7 +246,9 @@ int Command_Impl::cd(const std::vector<std::string>& args) {
 
 inline int Command_Impl::ls(const std::vector<std::string>& args) {
     if (args.empty())
+    {
         return this->recdir(fs::current_path().string());
+    }
 
     if (args.size() > 1)
     {
@@ -296,9 +339,13 @@ int Command_Impl::cp(const std::vector<std::string>& args) {
     }
 
     if (fs::is_directory(dest))
+    {
         fs::copy(source, dest / fs::path(source).filename());
+    }
     else
+    {
         fs::copy(source, dest);
+    }
 
     return _SUCCESS;
 }
@@ -321,7 +368,9 @@ int Command_Impl::mv(const std::vector<std::string>& args) {
 
     fs::path destPath(dest);
     if (fs::exists(destPath) && fs::is_directory(destPath))
+    {
         destPath /= fs::path(source).filename();
+    }
 
     try
     { fs::rename(source, destPath); } catch (const fs::filesystem_error& e)
@@ -345,11 +394,13 @@ int Command_Impl::touch(const std::vector<std::string>& args) {
     for (const auto& file : args)
     {
         std::ofstream outfile(file, std::ios::app | std::ios::out);
+
         if (!outfile)
         {
             std::cerr << "Error: Unable to create file " << file << "." << std::endl;
             return _ERROR;
         }
+
         outfile.close();
     }
 
@@ -375,6 +426,7 @@ int Command_Impl::cat(const std::vector<std::string>& args) {
         }
 
         std::ifstream infile(file);
+
         if (!infile)
         {
             std::cerr << "Error: Unable to open file " << file << "." << std::endl;
@@ -446,113 +498,113 @@ int Command_Impl::echo(const std::vector<std::string>& args) {
         if (out_file.is_open())
         {
             for (const std::string& arg : std::vector(args.begin(), args.end() - 2))
+            {
                 out_file << arg << " ";
+            }
+            else {
+                std::cerr << "Error: Unable to open file for writing." << std::endl;
+                return _ERROR;
+            }
         }
-        else
+
+        return _SUCCESS;
+    }
+
+    inline int Command_Impl::clear(const std::vector<std::string>& args) {
+        if (args.size() != 0)
         {
-            std::cerr << "Error: Unable to open file for writing." << std::endl;
+            std::cerr << "Error: Too many arguments." << std::endl;
             return _ERROR;
         }
+
+        std::cout << _CLEAR;
+        return _SUCCESS;
     }
 
-    return _SUCCESS;
-}
+    // open a file or directory
+    int Command_Impl::_open(const std::vector<std::string>& args) {
+        if (args.empty())
+        {
+            std::cerr << "Error: not enough arguments." << std::endl;
+            return _ERROR;
+        }
 
-inline int Command_Impl::clear(const std::vector<std::string>& args) {
-    if (args.size() != 0)
-    {
-        std::cerr << "Error: Too many arguments." << std::endl;
-        return _ERROR;
+        if (!fs::exists(args[0]))
+        {
+            std::cerr << "Error: path does not exist." << std::endl;
+            return _ERROR;
+        }
+
+        int dev_null = open("/dev/null", O_RDWR);
+
+        if (dev_null == -1)
+        {
+            perror("open");
+            _exit(EXIT_FAILURE);
+        }
+
+        dup2(dev_null, STDIN_FILENO);
+        dup2(dev_null, STDOUT_FILENO);
+        dup2(dev_null, STDERR_FILENO);
+
+        close(dev_null);
+
+        if (execlp("open", "open", args[0].c_str(), NULL) == -1)
+        {
+            perror("execvp");
+            _exit(EXIT_FAILURE);
+        }
+
+        return _SUCCESS;
     }
 
-    std::cout << _CLEAR;
-    return _SUCCESS;
-}
+    int Command_Impl::run(const std::vector<std::string>& args) {
+        if (args.empty())
+        {
+            std::cerr << "Error: not enough arguments." << std::endl;
+            return _ERROR;
+        }
 
-// open a file or directory
-int Command_Impl::_open(const std::vector<std::string>& args) {
-    if (args.empty())
-    {
-        std::cerr << "Error: not enough arguments." << std::endl;
-        return _ERROR;
+        if (!fs::exists(args[0]))
+        {
+            std::cerr << "Error: path does not exist." << std::endl;
+            return _ERROR;
+        }
+
+        // assert file is an executable
+        if (access(args[0].c_str(), X_OK) != 0)
+        {
+            std::cerr << "Could not execute file : " << args[0] << std::endl;
+            return _ERROR;
+        }
+
+        // construct the executable command
+        // for the system call - exporting
+        // adding the './' to the command
+        // this discards the fact that you can in normal
+        // shells execute a file that is not in the cwd
+        std::string exec_cmd = "./" + args[0];
+
+        // do the syscall
+        execl(exec_cmd.c_str(), args[0].c_str(), (char*) NULL);
+
+        return _SUCCESS;
     }
 
-    if (!fs::exists(args[0]))
-    {
-        std::cerr << "Error: path does not exist." << std::endl;
-        return _ERROR;
+    int Command_Impl::head(const std::vector<std::string>& args) {
+        if (args.empty())
+        {
+            std::cerr << "Not enough arguments." << std::endl;
+            return _ERROR;
+            // throw Command_error("Not enough arguments.");
+        }
+
+        if (!fs::exists(args[0]))
+        {
+            std::cerr << "Error: path does not exist." << std::endl;
+            return _ERROR;
+            // throw Command_error("Not enough arguments.");
+        }
+
+        // TODO: READ FILE and print it's head
     }
-
-    int dev_null = open("/dev/null", O_RDWR);
-
-    if (dev_null == -1)
-    {
-        perror("open");
-        _exit(EXIT_FAILURE);
-    }
-
-    dup2(dev_null, STDIN_FILENO);
-    dup2(dev_null, STDOUT_FILENO);
-    dup2(dev_null, STDERR_FILENO);
-
-    close(dev_null);
-
-    if (execlp("open", "open", args[0].c_str(), NULL) == -1)
-    {
-        perror("execvp");
-        _exit(EXIT_FAILURE);
-    }
-
-    return _SUCCESS;
-}
-
-int Command_Impl::run(const std::vector<std::string>& args) {
-    if (args.empty())
-    {
-        std::cerr << "Error: not enough arguments." << std::endl;
-        return _ERROR;
-    }
-
-    if (!fs::exists(args[0]))
-    {
-        std::cerr << "Error: path does not exist." << std::endl;
-        return _ERROR;
-    }
-
-    // assert file is an executable
-    if (access(args[0].c_str(), X_OK) != 0)
-    {
-        std::cerr << "Could not execute file : " << args[0] << std::endl;
-        return _ERROR;
-    }
-
-    // construct the executable command
-    // for the system call - exporting
-    // adding the './' to the command
-    // this discards the fact that you can in normal
-    // shells execute a file that is not in the cwd
-    std::string exec_cmd = "./" + args[0];
-
-    // do the syscall
-    execl(exec_cmd.c_str(), args[0].c_str(), (char*) NULL);
-
-    return _SUCCESS;
-}
-
-int Command_Impl::head(const std::vector<std::string>& args) {
-    if (args.empty())
-    {
-        std::cerr << "Not enough arguments." << std::endl;
-        return _ERROR;
-        // throw Command_error("Not enough arguments.");
-    }
-
-    if (!fs::exists(args[0]))
-    {
-        std::cerr << "Error: path does not exist." << std::endl;
-        return _ERROR;
-        // throw Command_error("Not enough arguments.");
-    }
-
-    // TODO: READ FILE and print it's head
-}

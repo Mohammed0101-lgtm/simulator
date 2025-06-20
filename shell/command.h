@@ -27,7 +27,6 @@ class Command_Impl
     int cat(const std::vector<std::string>& args);
     int echo(const std::vector<std::string>& args);
     int clear(const std::vector<std::string>& args);
-
     int _open(const std::vector<std::string>& args);
     int run(const std::vector<std::string>& args);
     int head(const std::vector<std::string>& args);

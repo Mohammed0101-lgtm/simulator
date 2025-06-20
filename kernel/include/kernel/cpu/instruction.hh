@@ -46,7 +46,8 @@ typedef enum: int {
 
 struct Instruction
 {
-    VALUE _value;  // for now just the value
+   public:
+    mutable VALUE _value;  // for now just the value
     // later on we might add other stuff
 
     Instruction() = delete;  // should never use the default constructor

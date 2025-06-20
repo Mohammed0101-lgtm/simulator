@@ -19,7 +19,7 @@ This project is still under development. While the basic architecture is in plac
 - **User Code Execution**: The ability to load and interpret real ELF binaries is still under development.
 - **Exception Handling**: Improvements to handle various exceptions and errors during execution.
 
-## Installation
+## Install
 
 To use or contribute to this project, follow the steps below:
 

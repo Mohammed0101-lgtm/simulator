@@ -192,4 +192,5 @@ class Panic_kernel: public std::exception
 }  // namespace error
 }  // namespace kernel
 
+
 #endif  // __ERROR_H__

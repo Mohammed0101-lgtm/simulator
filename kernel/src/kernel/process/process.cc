@@ -1,5 +1,5 @@
-#include "kernel/process/process.h"
-#include "kernel/error.h"
+#include "process/process.hh"
+#include "error.h"
 
 #include <memory>
 
@@ -8,22 +8,21 @@ namespace kernel {
 namespace proc {
 
 
-explicit kernel::proc::Process::Process(
-  int pid, int priority, int pc, int sp, int base, int limit, std::size_t stackSize) {
+kernel::proc::Process::Process(int pid, int priority, int pc, int sp, int base, int limit, std::size_t stackSize) {
     this->_process_control_block =
       std::make_unique<kernel::proc::PCB>(kernel::proc::PCB(pid, priority, pc, sp, base, limit, stackSize));
     this->_page_table._entries.clear();  // Initialize the page table
 }
 
-explicit kernel::proc::Process::Process(kernel::proc::Process&& process) :
+kernel::proc::Process::Process(kernel::proc::Process&& process) :
     _process_control_block(std::move(process._process_control_block)),
     _page_table(std::move(process._page_table)) {}
 
-explicit kernel::proc::Process::Process(const kernel::proc::Process& process) {
+kernel::proc::Process::Process(const kernel::proc::Process& process) {
     if (process._process_control_block)
         this->_process_control_block = std::make_unique<kernel::proc::PCB>(*process._process_control_block);
 
-    _page_table = process._page_table;  // Assumes PageTable and its entries support deep copy
+    this->_page_table = process._page_table;  // Assumes PageTable and its entries support deep copy
 }
 
 kernel::proc::Process& kernel::proc::Process::operator=(const kernel::proc::Process& other) {
@@ -142,6 +141,7 @@ void kernel::proc::Process::map_virtual_page(kernel::memo::PageID vpage, kernel:
 
     this->_page_table._entries[vpage] = entry;
 }
+
 
 }  // namespace proc
 }  // namespace kernel

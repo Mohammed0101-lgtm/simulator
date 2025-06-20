@@ -1,4 +1,5 @@
-#include "elf/parser.h"
+#include "elf/parser.hh"
+
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -20,6 +21,7 @@ kernel::elf::ELF_Parser::ELF_Parser(const std::string& elf_path) {
     std::streamsize size = file.tellg();
     file.seekg(0, std::ios::beg);
     _elf_data.resize(size);
+
     if (!file.read(reinterpret_cast<char*>(&_elf_data[0]), size))
     {
         std::cerr << "Failed to read ELF file\n";

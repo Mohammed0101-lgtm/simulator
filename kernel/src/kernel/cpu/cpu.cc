@@ -1,5 +1,5 @@
-#include "cpu/cpu.h"
-#include "cpu/instruction.h"
+#include "cpu/cpu.hh"
+#include "cpu/instruction.hh"
 
 
 namespace kernel {
@@ -7,8 +7,10 @@ namespace cpu {
 
 
 kernel::cpu::CPU::CPU() :
-    _registers{Register(RegLabel::R0), Register(RegLabel::R1), Register(RegLabel::R2), Register(RegLabel::R3),
-               Register(RegLabel::R4), Register(RegLabel::R5), Register(RegLabel::R6), Register(RegLabel::R7)},
+    _registers{kernel::cpu::Register(kernel::cpu::RegLabel::R0), kernel::cpu::Register(kernel::cpu::RegLabel::R1),
+               kernel::cpu::Register(kernel::cpu::RegLabel::R2), kernel::cpu::Register(kernel::cpu::RegLabel::R3),
+               kernel::cpu::Register(kernel::cpu::RegLabel::R4), kernel::cpu::Register(kernel::cpu::RegLabel::R5),
+               kernel::cpu::Register(kernel::cpu::RegLabel::R6), kernel::cpu::Register(kernel::cpu::RegLabel::R7)},
     _sp(0x00),
     _pc(0) {}
 
@@ -56,7 +58,7 @@ void kernel::cpu::CPU::tick() {
             this->_pc += 4;
         return;
     case kernel::cpu::instr::VALUE::SYSCALL :  // SYSCALL
-        syscall_handler();
+        this->syscall_handler();
         break;
     case kernel::cpu::instr::VALUE::AND :  // AND
         this->_registers[rd].setInstruction(instr::Instruction(this->_registers[rs1].getInstruction()._value

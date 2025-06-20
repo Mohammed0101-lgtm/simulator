@@ -1,7 +1,7 @@
 #ifndef __PANIC_H__
 #define __PANIC_H__
 
-#include "cpu/cpu.h"
+#include "cpu/cpu.hh"
 #include <string>
 
 

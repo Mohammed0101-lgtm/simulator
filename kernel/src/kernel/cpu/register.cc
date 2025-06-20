@@ -1,4 +1,4 @@
-#include "cpu/register.h"
+#include "cpu/register.hh"
 
 
 namespace kernel {

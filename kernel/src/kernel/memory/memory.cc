@@ -1,4 +1,4 @@
-#include "memory/memory.h"
+#include "memory/memory.hh"
 #include "error.h"
 
 #include <iostream>
@@ -6,6 +6,10 @@
 
 namespace kernel {
 namespace memo {
+
+
+MemoryManager memory_manager;
+
 
 kernel::memo::PageID kernel::memo::MemoryManager::allocate_physical_page() {
     kernel::memo::PageID new_page_id = this->_next_page_id;

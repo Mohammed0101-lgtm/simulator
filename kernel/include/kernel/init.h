@@ -13,7 +13,7 @@ namespace kernel {
 namespace core {
 
 void init(memo::MemoryManager& memory_manager, cpu::CPU& cpu) {
-    const std::string elf_path = "bin/init.elf";  
+    const std::string elf_path = "bin/init.elf";
 
     elf::ELF_Parser parser(elf_path);
     if (!parser.is_valid())
@@ -22,7 +22,7 @@ void init(memo::MemoryManager& memory_manager, cpu::CPU& cpu) {
         return;
     }
 
-    proc::Process user_process;
+    proc::Process   user_process;
     elf::ELF_Loader loader;
 
     if (!loader.load_elf(user_process, elf_path))
@@ -45,7 +45,7 @@ void init(memo::MemoryManager& memory_manager, cpu::CPU& cpu) {
 
     kernel::proc::Scheduler scheduler;
     scheduler.add_process(std::make_unique<kernel::proc::Process>(std::move(user_process)));
-    scheduler.run(); 
+    scheduler.run();
 }
 
 }  // namespace core

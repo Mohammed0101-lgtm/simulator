@@ -30,44 +30,6 @@ enum class ProcessState : int {
     TERMINATED  // Process has finished execution
 };
 
-enum class FileType {
-    REGULAR,
-    DIRECTORY,
-    CHAR,
-    BLOCK,
-    FIFO,
-    SOCKET
-};
-
-enum class FileMode {
-    READ,
-    WRITE,
-    APPEND,
-    READ_WRITE
-};
-
-enum class FilePermission {
-    READ,
-    WRITE,
-    EXECUTE
-};
-
-enum class FileStatus {
-    OPEN,
-    CLOSED,
-    ERROR
-};
-
-enum class FileFlag {
-    O_RDONLY,
-    O_WRONLY,
-    O_RDWR,
-    O_APPEND,
-    O_CREAT,
-    O_TRUNC,
-    O_EXCL
-};
-
 class PCB
 {
    protected:

@@ -1,10 +1,10 @@
-#include "elf/loader.h"
-#include "cpu/cpu.h"
-#include "elf/execute.h"
-#include "elf/header.h"
-#include "elf/parser.h"
-#include "memory/memory.h"
-#include "process/process.h"
+#include "elf/loader.hh"
+#include "cpu/cpu.hh"
+#include "elf/execute.hh"
+#include "elf/header.hh"
+#include "elf/parser.hh"
+#include "memory/memory.hh"
+#include "process/process.hh"
 
 #include <fstream>
 #include <string>

@@ -1,4 +1,4 @@
-#include "cpu/instruction.h"
+#include "cpu/instruction.hh"
 
 
 namespace kernel {
@@ -10,7 +10,7 @@ kernel::cpu::instr::Instruction::Instruction(int val) {
     if (val < kernel::cpu::instr::VALUE::LOAD
         || (val > kernel::cpu::instr::VALUE::SYSCALL && val != kernel::cpu::instr::VALUE::HALT))
         throw kernel::error::Unknown_instruction("Error: Unknown instruction is not allowed.");
-    _value = static_cast<VALUE>(val);
+    this->_value = static_cast<VALUE>(val);
 }
 
 bool kernel::cpu::instr::Instruction::operator==(const kernel::cpu::instr::Instruction& other) const {
